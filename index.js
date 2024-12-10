@@ -42,6 +42,20 @@ app.get("/person/:id", (req, res) => {
   res.json(person);
 });
 
+// update a person by id
+app.put("/person/:id", (req, res) => {
+  // load the data from the file
+  const data = loadData();
+  // find the person with the given id
+  const person = data.find((person) => person.id === parseInt(req.params.id));
+  // update the person with the new data
+  Object.assign(person, req.body);
+  saveData(data);
+
+  // send the updated person as a response
+  res.json(person);
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
