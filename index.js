@@ -38,8 +38,14 @@ app.get("/person/:id", (req, res) => {
   const data = loadData();
   // find the person with the given id
   const person = data.find((person) => person.id === parseInt(req.params.id));
-  // send the person as a response
-  res.json(person);
+
+  if (!person) {
+    // if the person is not found, send a 404 response
+    res.status(404).send("Person not found");
+  } else {
+    // or send the person as a response
+    res.json(person);
+  }
 });
 
 // update a person by id
@@ -48,12 +54,17 @@ app.put("/person/:id", (req, res) => {
   const data = loadData();
   // find the person with the given id
   const person = data.find((person) => person.id === parseInt(req.params.id));
-  // update the person with the new data
-  Object.assign(person, req.body);
-  saveData(data);
 
-  // send the updated person as a response
-  res.json(person);
+  if (!person) {
+    // if the person is not found, send a 404 response
+    res.status(404).send("Person not found");
+  } else {
+    // or update the person with the new data
+    Object.assign(person, req.body);
+    saveData(data);
+    // send the updated person as a response
+    res.json(person);
+  }
 });
 
 // delete a person by id
@@ -64,12 +75,17 @@ app.delete("/person/:id", (req, res) => {
   const personIndex = data.findIndex(
     (person) => person.id === parseInt(req.params.id)
   );
-  // remove the person from the data
-  data.splice(personIndex, 1);
-  saveData(data);
 
-  // send a success response
-  res.status(204).send();
+  if (personIndex === -1) {
+    // if the person is not found, send a 404 response
+    res.status(404).send("Person not found");
+  } else {
+    // remove the person from the data
+    data.splice(personIndex, 1);
+    saveData(data);
+    // send a success response
+    res.status(204).send();
+  }
 });
 
 app.listen(PORT, () => {
