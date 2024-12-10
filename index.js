@@ -56,6 +56,22 @@ app.put("/person/:id", (req, res) => {
   res.json(person);
 });
 
+// delete a person by id
+app.delete("/person/:id", (req, res) => {
+  // load the data from the file
+  const data = loadData();
+  // find the person with the given id
+  const personIndex = data.findIndex(
+    (person) => person.id === parseInt(req.params.id)
+  );
+  // remove the person from the data
+  data.splice(personIndex, 1);
+  saveData(data);
+
+  // send a success response
+  res.status(204).send();
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
